@@ -15,6 +15,7 @@ public class EfAppointmentRepository : IAppointmentRepository
     public Appointment Add(Appointment appointment)
     {
         _context.Appointments.Add(appointment);
+        _context.SaveChanges();
         return appointment;
     }
 
@@ -43,4 +44,17 @@ public class EfAppointmentRepository : IAppointmentRepository
         _context.SaveChanges();
         return appointment;
     }
+    public bool IsValidAppointmentDate(DateTime appointmentDate)
+    {
+        return appointmentDate >= DateTime.Now.AddDays(3);
+    }
+
+    // Randevuları getirmek için de bir metod ekleyebiliriz (eğer lazım olacaksa):
+    public List<Appointment> GetAppointmentsForDoctor(int doctorId)
+    {
+        return _context.Appointments
+            .Where(a => a.DoctorId == doctorId)
+            .ToList();
+    }
+
 }

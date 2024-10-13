@@ -1,4 +1,5 @@
 ﻿using HospitalAppointmentSystem.Models;
+using HospitalAppointmentSystem.Models.Dtos.Appointments.Request;
 
 namespace HospitalAppointmentSystem.Services.Abstracts;
 
@@ -15,4 +16,7 @@ public interface IAppointmentService
 
 
     Appointment Uptdate(Appointment appointment);
+    string CreateAppointment(AppointmentDto appointmentDto);
+
+
 }
