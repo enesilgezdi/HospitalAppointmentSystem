@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HospitalAppointmentSystem.Migrations
 {
     [DbContext(typeof(MsSqlContext))]
-    [Migration("20241014092454_second")]
-    partial class second
+    [Migration("20241014093224_first")]
+    partial class first
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

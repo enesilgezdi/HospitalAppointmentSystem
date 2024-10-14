@@ -11,7 +11,10 @@ public sealed class Doctor:Entity<int>
 
     public List<Appointment> Patiens { get; set; }
 
- 
+    public Doctor()
+    {
+        Patiens = new List<Appointment>();
+    }
 
     public static explicit operator Doctor(AddDoctorRequetDto dto)
     {
