@@ -2,8 +2,7 @@
 
 namespace HospitalAppointmentSystem.Repository.Abstracts;
 
-public interface IDoctorRepository : IEntityRepository<Doctor>
+public interface IDoctorRepository : IEntityRepository<Doctor ,int>
 {
 
-    List<Doctor> GetAllByAppointment(string text);
 }

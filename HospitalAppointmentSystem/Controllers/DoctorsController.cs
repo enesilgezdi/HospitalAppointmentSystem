@@ -1,4 +1,5 @@
 ﻿using HospitalAppointmentSystem.Models;
+using HospitalAppointmentSystem.Models.Dtos.Doctors.Request;
 using HospitalAppointmentSystem.Services.Abstracts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,24 +20,33 @@ public class DoctorsController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("delete")]
+    [HttpDelete("delete")]
     public IActionResult Delete(int id)
     {
         var result = _doctorService.Delete(id);
         return Ok(result);
     }
 
-    [HttpGet("update")]
-    public IActionResult Update(Doctor doctor)
+    [HttpPut("update")]
+    public IActionResult Update(AddDoctorRequetDto updatedDoctor)
     {
-        var result = _doctorService.Uptdate(doctor);
+        var result = _doctorService.Uptdate(updatedDoctor);
         return Ok(result);
     }
 
     [HttpPost("add")]
-    public IActionResult Add(Doctor doctor)
+    public IActionResult Add(AddDoctorRequetDto doctor)
     {
         var result = _doctorService.Add(doctor);
+        if(!result.success)
+        {
+            return BadRequest(new
+            {
+                Status=400,
+                message= result.Message
+            });
+
+        }
         return Ok(result);
     }
 

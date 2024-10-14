@@ -1,6 +1,6 @@
 ﻿using HospitalAppointmentSystem.Models;
-using HospitalAppointmentSystem.Models.Dtos.Appointments.Request;
 using HospitalAppointmentSystem.Repository.Abstracts;
+using HospitalAppointmentSystem.ReturnModels;
 using HospitalAppointmentSystem.Services.Abstracts;
 
 namespace HospitalAppointmentSystem.Services.Concretes;
@@ -13,13 +13,60 @@ public class AppointmentService : IAppointmentService
     {
         _appointmentRepository = appointmentRepository;
     }
-    public Appointment Add(Appointment appointment)
+    public ReturnModels<Appointment> Add(Appointment appointment)
     {
-        Appointment created  = _appointmentRepository.Add(appointment);
-        return created;
+        DateTime today = DateTime.Now;
+        if(appointment.AppointmentDate< today.AddDays(3))
+        {
+            return new ReturnModels<Appointment>
+            {
+                Data = null,
+                success = false,
+                Message = "En az 3 gün sonrasına randevu alabilirsiniz"
+            };
+        }
+
+        if (appointment.DoctorId == 0)// buraya id kontrolü nasıl eklerim ilgili id yok ise mesela
+        {
+            return new ReturnModels<Appointment>
+            {
+                Data = null,
+                success = false,
+                Message = "Doktor id kısmı boş bırakılamaz."
+            };
+        }
+        if (appointment.PatientName is null || appointment.PatientName == "")
+        {
+            return new ReturnModels<Appointment>
+            {
+                Data = null,
+                success = false,
+                Message = "Hasta isim alanı boş bırakılamaz."
+            };
+        }
+
+        var existingAppointments = _appointmentRepository.GetAppointmentsByDoctorId(appointment.DoctorId);
+        if (existingAppointments.Count >= 10)
+        {
+            return new ReturnModels<Appointment>
+            {
+                Data = null,
+                success = false,
+                Message = "Bu doktor için en fazla 10 randevu oluşturulabilir."
+            };
+        }
+
+        return new ReturnModels<Appointment>
+        {
+
+            Data = _appointmentRepository.Add(appointment),
+            success = true,
+            Message = "Randevu başarıyla oluşturuldu."
+        };
+
     }
 
-    public Appointment Delete(int id)
+    public Appointment Delete(Guid id)
     {
         Appointment appointment = _appointmentRepository.Delete(id);
         return appointment;
@@ -30,10 +77,19 @@ public class AppointmentService : IAppointmentService
         return _appointmentRepository.GetAll();
     }
 
-    public Appointment? GetById(int id)
+    public Appointment? GetById(Guid id)
     {
         Appointment appointment = _appointmentRepository.GetById(id);
         return appointment;
+    }
+
+    public void DeleteExpired()
+    {
+        var result = _appointmentRepository.GetAll().Where(x => x.AppointmentDate < DateTime.Now).ToList();
+        foreach (var appointment in result)
+        {
+            _appointmentRepository.Delete(appointment.Id);
+        }
     }
 
     public Appointment Uptdate(Appointment appointment)
@@ -42,33 +98,5 @@ public class AppointmentService : IAppointmentService
         return updated;
     }
 
-
-    public string CreateAppointment(AppointmentDto appointmentDto)
-    {
-        // Boş alan kontrolü
-        if (string.IsNullOrEmpty(appointmentDto.PatientName))
-        {
-            return "Hasta ismi boş olamaz!";
-        }
-
-        // 3 gün sonrası kontrolü
-        if (!_appointmentRepository.IsValidAppointmentDate(appointmentDto.AppointmentDate))
-        {
-            return "Randevu tarihi bugünden en az 3 gün sonrası olmalıdır.";
-        }
-
-        // DTO'yu entity'ye çevir
-        var appointment = new Appointment
-        {
-            PatientName = appointmentDto.PatientName,
-            AppointmentDate = appointmentDto.AppointmentDate,
-            DoctorId = appointmentDto.DoctorId
-        };
-
-        // Randevuyu kaydet
-        _appointmentRepository.Add(appointment);
-
-        return "Randevu başarıyla oluşturuldu.";
-    }
-
+   
 }

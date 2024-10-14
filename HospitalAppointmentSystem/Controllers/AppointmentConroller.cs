@@ -1,6 +1,6 @@
 ﻿using HospitalAppointmentSystem.Models;
-using HospitalAppointmentSystem.Models.Dtos.Appointments.Request;
 using HospitalAppointmentSystem.Services.Abstracts;
+using HospitalAppointmentSystem.Services.Concretes;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HospitalAppointmentSystem.Controllers;
@@ -16,29 +16,41 @@ public class AppointmentConroller : ControllerBase
         _appointmentsService = appointmentService;
     }
 
-    [HttpGet("getall")]
+
+    
+    [HttpGet("getallappointments")]
     public IActionResult GetAll()
     {
         var result = _appointmentsService.GetAll();
+        _appointmentsService.DeleteExpired();
         return Ok(result);
     }
+
 
     [HttpPost("add")]
     public IActionResult Add(Appointment appointment)
     {
         var result = _appointmentsService.Add(appointment);
+        if (!result.success)
+        {
+            return BadRequest(new
+            {
+                StatusCode = 400,
+                message = result.Message
+            });
+        }
         return Ok(result);
     }
 
     [HttpDelete("delete")]
-    public IActionResult Delete(int id) 
+    public IActionResult Delete(Guid id) 
     {
         var result = _appointmentsService.Delete(id);
         return Ok(result);
     }
 
     [HttpGet("getbyid")]
-    public IActionResult GetById(int id) 
+    public IActionResult GetById(Guid id) 
     { 
         var result = _appointmentsService.GetById(id);
         return Ok(result);
@@ -51,18 +63,5 @@ public class AppointmentConroller : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost]
-    public IActionResult Create(AppointmentDto appointmentDto)
-    {
-        // Servisi çağır
-        var result = _appointmentsService.CreateAppointment(appointmentDto);
-
-        // Eğer hata varsa, BadRequest döneriz
-        if (result != "Randevu başarıyla oluşturuldu.")
-        {
-            return BadRequest(result);
-        }
-
-        return Ok(result);
-    }
+  
 }

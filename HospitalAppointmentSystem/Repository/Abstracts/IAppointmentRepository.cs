@@ -2,9 +2,7 @@
 
 namespace HospitalAppointmentSystem.Repository.Abstracts;
 
-public interface IAppointmentRepository :IEntityRepository<Appointment>
+public interface IAppointmentRepository :IEntityRepository<Appointment, Guid>
 {
-
-    bool IsValidAppointmentDate(DateTime appointmentDate);
-    List<Appointment> GetAppointmentsForDoctor(int doctorId);
+    List<Appointment> GetAppointmentsByDoctorId(int doctorId);
 }

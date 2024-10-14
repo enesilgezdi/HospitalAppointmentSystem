@@ -16,9 +16,11 @@ public class MsSqlContext : DbContext
         //optionsBuilder.UseSqlServer("Server= localhost,1433; Database = Identit_db; User=sa; Password=admin123456789; TrustServerCertificate=true");
 
         // Localdb
-        optionsBuilder.UseSqlServer(@"Server= (localdb)\MSSQLLocalDB; Database=Identit_db; Trusted_Connection = true");
+        optionsBuilder.UseSqlServer(@"Server= (localdb)\MSSQLLocalDB; Database=Hospital_db; Trusted_Connection = true");
     }
 
     public DbSet<Doctor> Doctors { get; set; }
     public DbSet<Appointment> Appointments { get; set; }
+
+  
 }

@@ -1,13 +1,12 @@
 ﻿namespace HospitalAppointmentSystem.Models;
 
-public sealed class Appointment : Entity
+public sealed class Appointment : Entity<Guid>
 {
-   
-    public Guid PatientId { get; set; }
+
+    public string PatientName { get; set; }
 
     public DateTime AppointmentDate { get; set; }
 
     public int DoctorId { get; set; }
-    public Doctor Doctor { get; set; }
-    public string PatientName { get; internal set; }
+  
 }

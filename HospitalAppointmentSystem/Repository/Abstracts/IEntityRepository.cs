@@ -2,16 +2,16 @@
 
 namespace HospitalAppointmentSystem.Repository.Abstracts;
 
-public interface IEntityRepository<TEntity> where TEntity : Entity, new()
+public interface IEntityRepository<TEntity ,TId> where TEntity : Entity<TId>, new()
 {
-    TEntity? GetById(int id);
+    TEntity? GetById(TId id);
     List<TEntity> GetAll();
 
     TEntity Add(TEntity doctor);
 
     TEntity Uptdate(TEntity doctor);
 
-    TEntity Delete(int id);
+    TEntity Delete(TId id);
 
 
 }

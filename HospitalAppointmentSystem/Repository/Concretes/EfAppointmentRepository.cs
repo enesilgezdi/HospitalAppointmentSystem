@@ -19,7 +19,7 @@ public class EfAppointmentRepository : IAppointmentRepository
         return appointment;
     }
 
-    public Appointment Delete(int id)
+    public Appointment Delete(Guid id)
     {
         Appointment appointment = GetById(id);
         _context.Appointments.Remove(appointment);
@@ -29,10 +29,16 @@ public class EfAppointmentRepository : IAppointmentRepository
 
     public List<Appointment> GetAll()
     {
+        _context.SaveChanges();
         return _context.Appointments.ToList();
     }
 
-    public Appointment? GetById(int id)
+    public List<Appointment> GetAppointmentsByDoctorId(int doctorId)
+    {
+        return _context.Appointments.Where(x=>x.DoctorId == doctorId).ToList();
+    }
+
+    public Appointment? GetById(Guid id)
     {
         Appointment? appointment = _context.Appointments.Find(id);
         return appointment;
@@ -44,17 +50,7 @@ public class EfAppointmentRepository : IAppointmentRepository
         _context.SaveChanges();
         return appointment;
     }
-    public bool IsValidAppointmentDate(DateTime appointmentDate)
-    {
-        return appointmentDate >= DateTime.Now.AddDays(3);
-    }
-
-    // Randevuları getirmek için de bir metod ekleyebiliriz (eğer lazım olacaksa):
-    public List<Appointment> GetAppointmentsForDoctor(int doctorId)
-    {
-        return _context.Appointments
-            .Where(a => a.DoctorId == doctorId)
-            .ToList();
-    }
+  
+   
 
 }

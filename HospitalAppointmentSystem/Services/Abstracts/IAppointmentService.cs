@@ -1,22 +1,23 @@
 ﻿using HospitalAppointmentSystem.Models;
-using HospitalAppointmentSystem.Models.Dtos.Appointments.Request;
 
 namespace HospitalAppointmentSystem.Services.Abstracts;
+using HospitalAppointmentSystem.ReturnModels;
 
 public interface IAppointmentService
 {
-    Appointment Add(Appointment appointment);
 
-    Appointment Delete(int id);
+    ReturnModels<Appointment> Add(Appointment appointment);
+
+    Appointment Delete(Guid id);
 
     List<Appointment> GetAll();
 
 
-    Appointment? GetById(int id);
+    Appointment? GetById(Guid id);
 
 
     Appointment Uptdate(Appointment appointment);
-    string CreateAppointment(AppointmentDto appointmentDto);
 
+    void DeleteExpired();
 
 }

@@ -1,10 +1,12 @@
 ﻿using HospitalAppointmentSystem.Models;
+using HospitalAppointmentSystem.Models.Dtos.Doctors.Request;
+using HospitalAppointmentSystem.ReturnModels;
 
 namespace HospitalAppointmentSystem.Services.Abstracts;
 
 public interface IDoctorService
 {
-    Doctor Add(Doctor doctor);
+    ReturnModels<Doctor> Add(AddDoctorRequetDto doctor);
 
 
     Doctor Delete(int id);
@@ -12,13 +14,12 @@ public interface IDoctorService
     List<Doctor> GetAll();
 
 
-    List<Doctor> GetAllByAppointment(string text);
 
 
     Doctor? GetById(int id);
 
 
-    Doctor Uptdate(Doctor doctor);
+    Doctor Uptdate(AddDoctorRequetDto doctor);
     
 
 }

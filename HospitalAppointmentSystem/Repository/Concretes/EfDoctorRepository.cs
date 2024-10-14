@@ -1,6 +1,7 @@
 ﻿using HospitalAppointmentSystem.Context;
 using HospitalAppointmentSystem.Models;
 using HospitalAppointmentSystem.Repository.Abstracts;
+using Microsoft.EntityFrameworkCore;
 
 namespace HospitalAppointmentSystem.Repository.Concretes;
 
@@ -30,13 +31,11 @@ public class EfDoctorRepository : IDoctorRepository
 
     public List<Doctor> GetAll()
     {
-        return _context.Doctors.ToList();
+        return _context.Doctors.
+            Include(x=>x.Patiens)
+            .ToList();
     }
 
-    public List<Doctor> GetAllByAppointment(string text)
-    {
-        throw new NotImplementedException();
-    }
 
     public Doctor? GetById(int id)
     {
